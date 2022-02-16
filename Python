@@ -5,6 +5,8 @@ from tkinter import filedialog, colorchooser, font
 from tkinter.messagebox import *
 from tkinter.filedialog import * 
 
+
+hej = False
 def change_color():
     color = colorchooser.askcolor(title="pick a color or die")
     text_area.config(fg=color[1])
@@ -27,7 +29,7 @@ def open_file():
 
         text_area.insert(1.0, file.read())
     except Exception:
-        print("Couldnt read file")
+        print("Couldnt read file or nothing written on the file")
 
     finally:
         file.close()
@@ -51,7 +53,17 @@ def save_file():
 def cut():
     text_area.event_generate("<<Cut>>")
 
-def copy():
+def on_close():
+    
+    close = askyesno("Warning","Do you want to save?")
+    
+    if close:
+        file = filedialog.asksaveasfilename(initialfile="untitled.txt", defaultextension=".txt", filetypes=[("All Files", "*.*"),("Text Documents", "*.txt")])
+    if not close:
+       window.destroy()
+    
+
+def copy(): 
     text_area.event_generate("<<Copy>>")
 
 def paste():
@@ -124,5 +136,7 @@ help_menu = Menu(menu_bar, tearoff=0)
 menu_bar.add_cascade(label="Help", menu=help_menu)
 help_menu.add_command(label="About",command=about)
 
+window.protocol("WM_DELETE_WINDOW", on_close)
 window.mainloop()
+
 
