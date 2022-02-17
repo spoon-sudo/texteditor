@@ -4,12 +4,22 @@ from tkinter import *
 from tkinter import filedialog, colorchooser, font
 from tkinter.messagebox import *
 from tkinter.filedialog import * 
+from gtts import gTTS
 
 
 hej = False
-def change_color():
+def change_color(): 
     color = colorchooser.askcolor(title="pick a color or die")
     text_area.config(fg=color[1])
+
+def texttospeech():
+    warning = askokcancel("Warning", "This will save a mp3 file")
+    if warning:
+        texts = text_area.get(1.0, END)
+        language = 'en'
+        myobj = gTTS(text=texts, lang=language, slow=False)
+        myobj.save("tts.mp3")
+        os.system("tts.mp3")
 
 def change_font(*args):
     text_area.config(font=(font_name.get(),size_box.get()))
@@ -61,6 +71,7 @@ def on_close():
         file = filedialog.asksaveasfilename(initialfile="untitled.txt", defaultextension=".txt", filetypes=[("All Files", "*.*"),("Text Documents", "*.txt")])
     if not close:
        window.destroy()
+        
     
 
 def copy(): 
@@ -123,6 +134,7 @@ menu_bar.add_cascade(label="File", menu=file_menu)
 file_menu.add_command(label="New File",command=new_file)
 file_menu.add_command(label="Open File",command=open_file)
 file_menu.add_command(label="Save File",command=save_file)
+file_menu.add_command(label="Convert text into .mp3 file",command=texttospeech)
 file_menu.add_separator()
 file_menu.add_command(label="Exit",command=quit)
 
@@ -138,5 +150,4 @@ help_menu.add_command(label="About",command=about)
 
 window.protocol("WM_DELETE_WINDOW", on_close)
 window.mainloop()
-
 
